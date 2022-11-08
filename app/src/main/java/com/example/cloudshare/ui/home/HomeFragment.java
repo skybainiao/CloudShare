@@ -1,13 +1,21 @@
 package com.example.cloudshare.ui.home;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,13 +23,26 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.bumptech.glide.Glide;
 import com.example.cloudshare.MainActivity;
 import com.example.cloudshare.Model.Pic;
 import com.example.cloudshare.MyAdapter;
 import com.example.cloudshare.R;
 import com.example.cloudshare.databinding.FragmentHomeBinding;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class HomeFragment extends Fragment {
 
@@ -30,6 +51,13 @@ public class HomeFragment extends Fragment {
     private GridView grid_photo;
     private BaseAdapter mAdapter = null;
     private ArrayList<Pic> mData = null;
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
+    private LinearLayout l1;
+    private LinearLayout l2;
+    private LinearLayout main;
+    private int num;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -38,44 +66,79 @@ public class HomeFragment extends Fragment {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
         mContext = getContext();
-        grid_photo = (GridView) root.findViewById(R.id.grid_photo);
+        num=5;
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+        storageReference = storageReference.child("img/uNnUdZILKB0-full.jpeg");
 
-        mData = new ArrayList<Pic>();
-        mData.add(new Pic(R.mipmap.iv_icon_1, "图标1"));
-        mData.add(new Pic(R.mipmap.iv_icon_2, "图标2"));
-        mData.add(new Pic(R.mipmap.iv_icon_3, "图标3"));
-        mData.add(new Pic(R.mipmap.iv_icon_4, "图标4"));
-        mData.add(new Pic(R.mipmap.iv_icon_5, "图标5"));
-        mData.add(new Pic(R.mipmap.iv_icon_6, "图标6"));
-        mData.add(new Pic(R.mipmap.iv_icon_7, "图标7"));
 
-        mAdapter = new MyAdapter<Pic>(mData, R.layout.item_grid_icon) {
-            @Override
-            public void bindView(ViewHolder holder, Pic obj) {
-                holder.setImageResource(R.id.img_icon, obj.getId());
-                holder.setText(R.id.txt_icon, obj.getName());
-            }
-        };
+        l1=root.findViewById(R.id.l1);
+        l2=root.findViewById(R.id.l2);
+        LinearLayout linearLayout = new LinearLayout(mContext);
+        l1.addView(linearLayout);
+        TextView textView = new TextView(mContext);
+        textView.setText("hello");
+        linearLayout.addView(textView);
 
-        grid_photo.setAdapter(mAdapter);
+        for (int i = 0; i < num; i++) {
+            //LinearLayout linearLayout = new LinearLayout(mContext);
+            //l1.addView(linearLayout);
+            //linearLayout.setOrientation(LinearLayout.VERTICAL);
+            ////ImageView imageView = new ImageView(mContext);
+            //TextView textView = new TextView(mContext);
+            //textView.setText("hello");
+            ////linearLayout.addView(imageView);
+            //linearLayout.addView(textView);
 
-        grid_photo.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(mContext, "你点击了~" + position + "~项", Toast.LENGTH_SHORT).show();
-            }
-        });
+        }
 
 
 
 
+
+
+
+        System.out.println("SHA:"+sHA1(getContext()));
 
         return root;
     }
 
-    @Override
+
+
+
+
+
+    public static String sHA1(Context context){
+        try {
+            PackageInfo info = context.getPackageManager().getPackageInfo(
+                    context.getPackageName(), PackageManager.GET_SIGNATURES);
+            byte[] cert = info.signatures[0].toByteArray();
+            MessageDigest md = MessageDigest.getInstance("SHA1");
+            byte[] publicKey = md.digest(cert);
+            StringBuffer hexString = new StringBuffer();
+            for (int i = 0; i < publicKey.length; i++) {
+                String appendString = Integer.toHexString(0xFF & publicKey[i])
+                        .toUpperCase(Locale.US);
+                if (appendString.length() == 1)
+                    hexString.append("0");
+                hexString.append(appendString);
+                hexString.append(":");
+            }
+            String result = hexString.toString();
+            return result.substring(0, result.length()-1);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+
+
+        @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;

@@ -1,6 +1,8 @@
 package com.example.cloudshare.Model;
 
-public class Pic {
+import java.io.Serializable;
+
+public class Pic implements Serializable {
     private int id;
     private String name;
 

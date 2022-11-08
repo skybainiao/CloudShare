@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public abstract class MyAdapter<T> extends BaseAdapter {
 
     private ArrayList<T> mData;
-    private int mLayoutRes;           //布局id
+    private int mLayoutRes;
 
 
     public MyAdapter() {
@@ -59,7 +59,7 @@ public abstract class MyAdapter<T> extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    //往特定位置，添加一个元素
+
     public void add(int position, T data) {
         if (mData == null) {
             mData = new ArrayList<>();
@@ -92,12 +92,12 @@ public abstract class MyAdapter<T> extends BaseAdapter {
 
     public static class ViewHolder {
 
-        private SparseArray<View> mViews;   //存储ListView 的 item中的View
-        private View item;                  //存放convertView
-        private int position;               //游标
-        private Context context;            //Context上下文
+        private SparseArray<View> mViews;
+        private View item;
+        private int position;
+        private Context context;
 
-        //构造方法，完成相关初始化
+
         private ViewHolder(Context context, ViewGroup parent, int layoutRes) {
             mViews = new SparseArray<>();
             this.context = context;
@@ -106,7 +106,7 @@ public abstract class MyAdapter<T> extends BaseAdapter {
             item = convertView;
         }
 
-        //绑定ViewHolder与item
+
         public static ViewHolder bind(Context context, View convertView, ViewGroup parent,
                                       int layoutRes, int position) {
             ViewHolder holder;
@@ -131,23 +131,17 @@ public abstract class MyAdapter<T> extends BaseAdapter {
         }
 
 
-        /**
-         * 获取当前条目
-         */
+
         public View getItemView() {
             return item;
         }
 
-        /**
-         * 获取条目位置
-         */
+
         public int getItemPosition() {
             return position;
         }
 
-        /**
-         * 设置文字
-         */
+
         public ViewHolder setText(int id, CharSequence text) {
             View view = getView(id);
             if (view instanceof TextView) {
@@ -156,9 +150,7 @@ public abstract class MyAdapter<T> extends BaseAdapter {
             return this;
         }
 
-        /**
-         * 设置图片
-         */
+
         public ViewHolder setImageResource(int id, int drawableRes) {
             View view = getView(id);
             if (view instanceof ImageView) {
@@ -170,31 +162,25 @@ public abstract class MyAdapter<T> extends BaseAdapter {
         }
 
 
-        /**
-         * 设置点击监听
-         */
+
         public ViewHolder setOnClickListener(int id, View.OnClickListener listener) {
             getView(id).setOnClickListener(listener);
             return this;
         }
 
-        /**
-         * 设置可见
-         */
+
         public ViewHolder setVisibility(int id, int visible) {
             getView(id).setVisibility(visible);
             return this;
         }
 
-        /**
-         * 设置标签
-         */
+
         public ViewHolder setTag(int id, Object obj) {
             getView(id).setTag(obj);
             return this;
         }
 
-        //其他方法可自行扩展
+
 
     }
 
