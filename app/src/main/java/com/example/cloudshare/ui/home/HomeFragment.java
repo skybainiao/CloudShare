@@ -70,28 +70,45 @@ public class HomeFragment extends Fragment {
         num=5;
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-        storageReference = storageReference.child("img/uNnUdZILKB0-full.jpeg");
-
-
+        StorageReference ref = storageReference.child("img/WeChat Image_20220408133019.jpg");
         l1=root.findViewById(R.id.l1);
         l2=root.findViewById(R.id.l2);
-        LinearLayout linearLayout = new LinearLayout(mContext);
-        l1.addView(linearLayout);
-        TextView textView = new TextView(mContext);
-        textView.setText("hello");
-        linearLayout.addView(textView);
+
+        final long ONE_MEGABYTE = 1024 * 1024 * 5;
+
 
         for (int i = 0; i < num; i++) {
-            //LinearLayout linearLayout = new LinearLayout(mContext);
-            //l1.addView(linearLayout);
-            //linearLayout.setOrientation(LinearLayout.VERTICAL);
-            ////ImageView imageView = new ImageView(mContext);
-            //TextView textView = new TextView(mContext);
-            //textView.setText("hello");
-            ////linearLayout.addView(imageView);
-            //linearLayout.addView(textView);
+            ImageView imageView = new ImageView(getContext());
+            //set img
+            ref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+                    imageView.setImageBitmap(bitmap);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                }
+            });
 
+
+            imageView.setPadding(0,20,0,0);
+            imageView.setMaxHeight(300);
+            imageView.setMaxWidth(200);
+            l1.setPadding(0,0,0,0);
+            l1.addView(imageView);
         }
+
+
+
+
+
+
+
+
+
 
 
 
