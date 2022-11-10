@@ -55,6 +55,7 @@ public class HomeFragment extends Fragment {
     private StorageReference storageReference;
     private LinearLayout l1;
     private LinearLayout l2;
+    private LinearLayout l3;
     private LinearLayout main;
     private int num;
 
@@ -73,12 +74,15 @@ public class HomeFragment extends Fragment {
         StorageReference ref = storageReference.child("img/WeChat Image_20220408133019.jpg");
         l1=root.findViewById(R.id.l1);
         l2=root.findViewById(R.id.l2);
+        l3=root.findViewById(R.id.l3);
 
         final long ONE_MEGABYTE = 1024 * 1024 * 5;
 
 
         for (int i = 0; i < num; i++) {
             ImageView imageView = new ImageView(getContext());
+            imageView.setAdjustViewBounds(true);
+            TextView textView = new TextView(getContext());
             //set img
             ref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                 @Override
@@ -94,11 +98,13 @@ public class HomeFragment extends Fragment {
             });
 
 
+            textView.setText("Hygge");
             imageView.setPadding(0,20,0,0);
             imageView.setMaxHeight(300);
             imageView.setMaxWidth(200);
             l1.setPadding(0,0,0,0);
             l1.addView(imageView);
+            l1.addView(textView);
         }
 
 
