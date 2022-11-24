@@ -68,7 +68,7 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         mContext = getContext();
-        num=5;
+        num=10;
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         StorageReference ref = storageReference.child("img/WeChat Image_20220408133019.jpg");
@@ -83,12 +83,22 @@ public class HomeFragment extends Fragment {
             ImageView imageView = new ImageView(getContext());
             imageView.setAdjustViewBounds(true);
             TextView textView = new TextView(getContext());
+
+            ImageView imageView1 = new ImageView(getContext());
+            imageView1.setAdjustViewBounds(true);
+            TextView textView1 = new TextView(getContext());
+
+            ImageView imageView2 = new ImageView(getContext());
+            imageView2.setAdjustViewBounds(true);
+            TextView textView2 = new TextView(getContext());
             //set img
             ref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                 @Override
                 public void onSuccess(byte[] bytes) {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
                     imageView.setImageBitmap(bitmap);
+                    imageView1.setImageBitmap(bitmap);
+                    imageView2.setImageBitmap(bitmap);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -98,13 +108,20 @@ public class HomeFragment extends Fragment {
             });
 
 
-            textView.setText("Hygge");
-            imageView.setPadding(0,20,0,0);
-            imageView.setMaxHeight(300);
-            imageView.setMaxWidth(200);
-            l1.setPadding(0,0,0,0);
+            textView.setText("");
+            imageView.setAdjustViewBounds(true);
             l1.addView(imageView);
             l1.addView(textView);
+
+            textView1.setText("");
+            imageView1.setAdjustViewBounds(true);
+            l2.addView(imageView1);
+            l2.addView(textView1);
+
+            textView2.setText("");
+            imageView2.setAdjustViewBounds(true);
+            l3.addView(imageView2);
+            l3.addView(textView2);
         }
 
 
