@@ -60,6 +60,7 @@ public class HomeFragment extends Fragment {
     private int num;
 
 
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         HomeViewModel homeViewModel =
@@ -67,62 +68,26 @@ public class HomeFragment extends Fragment {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
         mContext = getContext();
         num=10;
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-        StorageReference ref = storageReference.child("img/WeChat Image_20220408133019.jpg");
+
         l1=root.findViewById(R.id.l1);
         l2=root.findViewById(R.id.l2);
-        l3=root.findViewById(R.id.l3);
 
-        final long ONE_MEGABYTE = 1024 * 1024 * 5;
-
-
-        for (int i = 0; i < num; i++) {
-            ImageView imageView = new ImageView(getContext());
-            imageView.setAdjustViewBounds(true);
-            TextView textView = new TextView(getContext());
-
-            ImageView imageView1 = new ImageView(getContext());
-            imageView1.setAdjustViewBounds(true);
-            TextView textView1 = new TextView(getContext());
-
-            ImageView imageView2 = new ImageView(getContext());
-            imageView2.setAdjustViewBounds(true);
-            TextView textView2 = new TextView(getContext());
-            //set img
-            ref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                @Override
-                public void onSuccess(byte[] bytes) {
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-                    imageView.setImageBitmap(bitmap);
-                    imageView1.setImageBitmap(bitmap);
-                    imageView2.setImageBitmap(bitmap);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle any errors
-                }
-            });
+        ImageView imageView = new ImageView(getContext());
+        imageView.setImageResource(R.mipmap.xiazai);
+        imageView.setAdjustViewBounds(true);
+        TextView textView = new TextView(getContext());
+        textView.setText("Default folder");
+        l1.addView(imageView);
+        l1.addView(textView);
 
 
-            textView.setText("");
-            imageView.setAdjustViewBounds(true);
-            l1.addView(imageView);
-            l1.addView(textView);
 
-            textView1.setText("");
-            imageView1.setAdjustViewBounds(true);
-            l2.addView(imageView1);
-            l2.addView(textView1);
-
-            textView2.setText("");
-            imageView2.setAdjustViewBounds(true);
-            l3.addView(imageView2);
-            l3.addView(textView2);
-        }
+        loadPic();
 
 
 
@@ -146,7 +111,49 @@ public class HomeFragment extends Fragment {
 
 
 
+    public void loadPic(){
 
+        final long ONE_MEGABYTE = 1024 * 1024 * 5;
+        StorageReference ref = storageReference.child("img/WeChat Image_20220408133019.jpg");
+
+        for (int i = 0; i < num; i++) {
+            ImageView imageView = new ImageView(getContext());
+            imageView.setAdjustViewBounds(true);
+            TextView textView = new TextView(getContext());
+
+            ImageView imageView1 = new ImageView(getContext());
+            imageView1.setAdjustViewBounds(true);
+            TextView textView1 = new TextView(getContext());
+
+
+            //set img
+            ref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+                    imageView.setImageBitmap(bitmap);
+                    imageView1.setImageBitmap(bitmap);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                }
+            });
+
+
+            textView.setText("");
+            imageView.setAdjustViewBounds(true);
+            l1.addView(imageView);
+            l1.addView(textView);
+
+            textView1.setText("");
+            imageView1.setAdjustViewBounds(true);
+            l2.addView(imageView1);
+            l2.addView(textView1);
+
+        }
+    }
 
 
     public static String sHA1(Context context){
