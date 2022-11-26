@@ -82,6 +82,7 @@ public class HomeFragment extends Fragment {
         imageView.setAdjustViewBounds(true);
         TextView textView = new TextView(getContext());
         textView.setText("Default folder");
+        textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         l1.addView(imageView);
         l1.addView(textView);
 
