@@ -1,6 +1,7 @@
 package com.example.cloudshare.ui.home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -31,6 +32,7 @@ import com.example.cloudshare.R;
 import com.example.cloudshare.databinding.FragmentHomeBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -47,18 +49,14 @@ import java.util.Locale;
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
-    private Context mContext;
-    private GridView grid_photo;
-    private BaseAdapter mAdapter = null;
-    private ArrayList<Pic> mData = null;
     private FirebaseStorage storage;
     private StorageReference storageReference;
     private LinearLayout l1;
     private LinearLayout l2;
-    private LinearLayout l3;
-    private LinearLayout main;
+    private FloatingActionButton floatingActionButton;
     private int num;
-
+    private int folders;
+    private String username;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -69,13 +67,16 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        mContext = getContext();
-        num=10;
+        Intent getIntent = getActivity().getIntent();
+        username = getIntent.getStringExtra("username");
+        System.out.println(username);
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-
+        num=0;
+        folders = 1;
         l1=root.findViewById(R.id.l1);
         l2=root.findViewById(R.id.l2);
+        floatingActionButton=root.findViewById(R.id.floatingActionButton2);
 
         ImageView imageView = new ImageView(getContext());
         imageView.setImageResource(R.mipmap.xiazai);
@@ -86,13 +87,33 @@ public class HomeFragment extends Fragment {
         l1.addView(imageView);
         l1.addView(textView);
 
-
-
         loadPic();
 
 
 
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                folders++;
+                ImageView imageView = new ImageView(getContext());
+                imageView.setImageResource(R.mipmap.xiazai);
+                imageView.setAdjustViewBounds(true);
+                TextView textView = new TextView(getContext());
+                textView.setText("folder"+folders);
+                textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                if (isOdd(folders)){
+                    l2.addView(imageView);
+                    l2.addView(textView);
+                }
+                else {
+                    l1.addView(imageView);
+                    l1.addView(textView);
+                }
 
+
+
+            }
+        });
 
 
 
@@ -111,6 +132,12 @@ public class HomeFragment extends Fragment {
     }
 
 
+    public boolean isOdd(int a){
+        if((a&1) != 1){
+            return true;
+        }
+        return false;
+    }
 
     public void loadPic(){
 
@@ -132,8 +159,8 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onSuccess(byte[] bytes) {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-                    //imageView.setImageBitmap(bitmap);
-                    //imageView1.setImageBitmap(bitmap);
+                    imageView.setImageBitmap(bitmap);
+                    imageView1.setImageBitmap(bitmap);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override

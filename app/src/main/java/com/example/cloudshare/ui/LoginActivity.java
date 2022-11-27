@@ -94,11 +94,11 @@ public class LoginActivity extends AppCompatActivity {
                                 startActivity(intent);
                             }
                             else {
-                                Toast.makeText(getApplicationContext(),"用户名或密码不正确", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(),"Incorrect username or password", Toast.LENGTH_LONG).show();
                             }
                         }
                         else {
-                            Toast.makeText(getApplicationContext(),"用户名或密码为空", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(),"username or password is empty", Toast.LENGTH_LONG).show();
                         }
                     }
 
