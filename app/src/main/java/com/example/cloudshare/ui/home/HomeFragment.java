@@ -132,8 +132,8 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onSuccess(byte[] bytes) {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-                    imageView.setImageBitmap(bitmap);
-                    imageView1.setImageBitmap(bitmap);
+                    //imageView.setImageBitmap(bitmap);
+                    //imageView1.setImageBitmap(bitmap);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
