@@ -1,6 +1,7 @@
 package com.example.cloudshare.ui.home;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -94,22 +96,33 @@ public class HomeFragment extends Fragment {
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                folders++;
-                ImageView imageView = new ImageView(getContext());
-                imageView.setImageResource(R.mipmap.xiazai);
-                imageView.setAdjustViewBounds(true);
-                TextView textView = new TextView(getContext());
-                textView.setText("folder"+folders);
-                textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                if (isOdd(folders)){
-                    l2.addView(imageView);
-                    l2.addView(textView);
-                }
-                else {
-                    l1.addView(imageView);
-                    l1.addView(textView);
-                }
-
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+                        .setTitle("Message")
+                        .setMessage("Do you want to add folders or pictures?")
+                        //点击窗口以外的区域，窗口消失 (默认为true)
+                        .setCancelable(false)
+                        //点击其中一个按钮才消失弹窗
+                        //一般有三个 Button类型：位置、命名不同，但方法一样
+                        // PositiveButton（确定，位置在最右边）,NegativeButton（否定，位置在最右边的左边）,NeutralButton（中立，位置在最左边）
+                        .setPositiveButton("Picture", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(getContext(), "Picture", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton("Folder", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                addFolder();
+                                Toast.makeText(getContext(),"Folder",Toast.LENGTH_SHORT).show();
+                            }
+                        }).setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(getContext(),"Cancel",Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                builder.show();
 
 
             }
@@ -131,6 +144,23 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
+    public void addFolder(){
+        folders++;
+        ImageView imageView = new ImageView(getContext());
+        imageView.setImageResource(R.mipmap.xiazai);
+        imageView.setAdjustViewBounds(true);
+        TextView textView = new TextView(getContext());
+        textView.setText("folder"+folders);
+        textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        if (isOdd(folders)){
+            l2.addView(imageView);
+            l2.addView(textView);
+        }
+        else {
+            l1.addView(imageView);
+            l1.addView(textView);
+        }
+    }
 
     public boolean isOdd(int a){
         if((a&1) != 1){
