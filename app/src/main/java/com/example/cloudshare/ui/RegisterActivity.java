@@ -18,6 +18,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 public class RegisterActivity extends AppCompatActivity {
 
     private ImageView back;
@@ -27,6 +30,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText password2;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
+    private ArrayList<String> folders;
 
 
     @Override
@@ -44,12 +48,14 @@ public class RegisterActivity extends AppCompatActivity {
         username=findViewById(R.id.editTextTextPersonName3);
         password1=findViewById(R.id.editTextTextPassword2);
         password2=findViewById(R.id.editTextTextPassword3);
+        folders=new ArrayList<>();
+        folders.add("folder1");
 
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SignUp(new User(username.getText().toString(),password1.getText().toString(),null));
+                SignUp(new User(username.getText().toString(),password1.getText().toString(),folders));
             }
         });
 

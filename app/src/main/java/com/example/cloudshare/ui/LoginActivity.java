@@ -38,7 +38,6 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private int num;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

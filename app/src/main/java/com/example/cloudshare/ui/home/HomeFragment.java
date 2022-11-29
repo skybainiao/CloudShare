@@ -32,9 +32,18 @@ import com.example.cloudshare.Model.Pic;
 import com.example.cloudshare.MyAdapter;
 import com.example.cloudshare.R;
 import com.example.cloudshare.databinding.FragmentHomeBinding;
+import com.example.cloudshare.ui.LoginActivity;
+import com.example.cloudshare.ui.PicsActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -47,6 +56,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Objects;
 
 public class HomeFragment extends Fragment {
 
@@ -56,9 +66,12 @@ public class HomeFragment extends Fragment {
     private LinearLayout l1;
     private LinearLayout l2;
     private FloatingActionButton floatingActionButton;
+    private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance("https://cloudshare-f4727-default-rtdb.europe-west1.firebasedatabase.app/");;
+    private DatabaseReference databaseReference=firebaseDatabase.getReference();;
     private int num;
     private int folders;
     private String username;
+    private ArrayList<String> folderList;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -68,28 +81,39 @@ public class HomeFragment extends Fragment {
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
         Intent getIntent = getActivity().getIntent();
         username = getIntent.getStringExtra("username");
         System.out.println(username);
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         num=0;
-        folders = 1;
+        folders = 0;
+        folderList = new ArrayList<>();
+
         l1=root.findViewById(R.id.l1);
         l2=root.findViewById(R.id.l2);
         floatingActionButton=root.findViewById(R.id.floatingActionButton2);
 
-        ImageView imageView = new ImageView(getContext());
-        imageView.setImageResource(R.mipmap.xiazai);
-        imageView.setAdjustViewBounds(true);
-        TextView textView = new TextView(getContext());
-        textView.setText("Default folder");
-        textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-        l1.addView(imageView);
-        l1.addView(textView);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+                long size = snapshot.child("Users").child(username).child("folders").getChildrenCount();
+                System.out.println(size);
+                for (int i = 0; i < size; i++) {
+                    addFolder();
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         loadPic();
+
+
 
 
 
@@ -98,25 +122,17 @@ public class HomeFragment extends Fragment {
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
                         .setTitle("Message")
-                        .setMessage("Do you want to add folders or pictures?")
-                        //点击窗口以外的区域，窗口消失 (默认为true)
+                        .setMessage("Do you want to add a new folder?")
                         .setCancelable(false)
-                        //点击其中一个按钮才消失弹窗
-                        //一般有三个 Button类型：位置、命名不同，但方法一样
-                        // PositiveButton（确定，位置在最右边）,NegativeButton（否定，位置在最右边的左边）,NeutralButton（中立，位置在最左边）
-                        .setPositiveButton("Picture", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(getContext(), "Picture", Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .setNegativeButton("Folder", new DialogInterface.OnClickListener() {
+                        .setNegativeButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 addFolder();
+                                //saveFolders(folderList);
                                 Toast.makeText(getContext(),"Folder",Toast.LENGTH_SHORT).show();
                             }
-                        }).setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                        })
+                        .setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Toast.makeText(getContext(),"Cancel",Toast.LENGTH_SHORT).show();
@@ -130,15 +146,6 @@ public class HomeFragment extends Fragment {
 
 
 
-
-
-
-
-
-
-
-
-
         System.out.println("SHA:"+sHA1(getContext()));
 
         return root;
@@ -147,11 +154,14 @@ public class HomeFragment extends Fragment {
     public void addFolder(){
         folders++;
         ImageView imageView = new ImageView(getContext());
+        imageView.setTag("folder"+folders);
         imageView.setImageResource(R.mipmap.xiazai);
         imageView.setAdjustViewBounds(true);
         TextView textView = new TextView(getContext());
         textView.setText("folder"+folders);
         textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+        folderList.add(textView.getText().toString());
+        System.out.println(folderList);
         if (isOdd(folders)){
             l2.addView(imageView);
             l2.addView(textView);
@@ -160,6 +170,21 @@ public class HomeFragment extends Fragment {
             l1.addView(imageView);
             l1.addView(textView);
         }
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), PicsActivity.class);
+                intent.putExtra("username", username);
+                intent.putExtra("folderName", imageView.getTag().toString());
+                System.out.println(imageView.getTag());
+                startActivity(intent);
+            }
+        });
+
+    }
+
+    public void saveFolders(ArrayList<String> folderList){
+        databaseReference.child("Users").child(username).child("folders").setValue(folderList);
     }
 
     public boolean isOdd(int a){
@@ -246,6 +271,7 @@ public class HomeFragment extends Fragment {
         @Override
     public void onDestroyView() {
         super.onDestroyView();
+        saveFolders(folderList);
         binding = null;
     }
 }
