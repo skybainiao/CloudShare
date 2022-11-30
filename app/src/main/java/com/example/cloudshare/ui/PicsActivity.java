@@ -33,6 +33,8 @@ import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 public class PicsActivity extends AppCompatActivity {
@@ -45,12 +47,14 @@ public class PicsActivity extends AppCompatActivity {
     private FloatingActionButton floatingActionButton;
     private FirebaseDatabase firebaseDatabase=FirebaseDatabase.getInstance("https://cloudshare-f4727-default-rtdb.europe-west1.firebasedatabase.app/");;
     private DatabaseReference databaseReference=firebaseDatabase.getReference();
-    private long num;
+    private long num = 0;
     private int PICK_IMAGE_REQUEST = 111;
     private String username;
     private String folderName;
     private Uri filePath;
     private ArrayList<ImageView> imageViews;
+    private StorageReference listRef;
+    private final long ONE_MEGABYTE = 1024 * 1024 * 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,19 +72,31 @@ public class PicsActivity extends AppCompatActivity {
         l4=findViewById(R.id.l4);
         imageViews=new ArrayList<>();
         floatingActionButton=findViewById(R.id.floatingActionButton3);
-        final long ONE_MEGABYTE = 1024 * 1024 * 5;
-        num=2;
+        listRef = storage.getReference().child(username).child(folderName);
 
-        databaseReference.addValueEventListener(new ValueEventListener() {
+
+        listRef.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                num= snapshot.child("Users").child(username).child(folderName).getChildrenCount();
-                System.out.println(num);
-            }
+            public void onSuccess(ListResult listResult) {
+                num=listResult.getItems().size();
+                System.out.println("num:"+num);
+                for (int i = 0; i < num; i++) {
+                    ImageView imageView = new ImageView(getApplicationContext());
+                    TextView textView = new TextView(getApplicationContext());
+                    textView.setText("PIC");
+                    imageView.setAdjustViewBounds(true);
+                    imageViews.add(imageView);
+                    System.out.println("size:+++++"+imageViews.size());
+                    if (isOdd(i)){
+                        l3.addView(imageView);
+                        l3.addView(textView);
+                    }
+                    else {
+                        l4.addView(imageView);
+                        l4.addView(textView);
+                    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
+                }
             }
         });
 
@@ -95,42 +111,26 @@ public class PicsActivity extends AppCompatActivity {
             }
         });
 
-        for (int i = 0; i < num; i++) {
-            ImageView imageView = new ImageView(this);
-            imageView.setAdjustViewBounds(true);
-            imageViews.add(imageView);
-
-            if (isOdd(num)){
-                l4.addView(imageView);
-            }
-            else {
-                l3.addView(imageView);
-            }
+        loadPics();
 
 
+    }
 
-        }
-
-        StorageReference listRef = storage.getReference().child(username).child(folderName);
-
-        System.out.println("wwwwwwwwwwwwwwwwwwwww");
+    public void loadPics(){
         listRef.listAll()
                 .addOnSuccessListener(new OnSuccessListener<ListResult>() {
                     @Override
                     public void onSuccess(ListResult listResult) {
-                        for (StorageReference prefix : listResult.getPrefixes()) {
-
-                        }
-                        for (StorageReference item : listResult.getItems()) {
-                            System.out.println(item.getPath());
-                            item.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                        for (int i = 0; i < listResult.getItems().size(); i++) {
+                            int finalI = i;
+                            System.out.println("finalI:"+finalI);
+                            listResult.getItems().get(i).getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                                 @Override
                                 public void onSuccess(byte[] bytes) {
-                                    for (int i = 0; i < imageViews.size(); i++) {
-                                        System.out.println("this is imgs!!!!!!!!!!!!!!!!!!!!");
-                                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-                                        imageViews.get(i).setImageBitmap(bitmap);
-                                    }
+                                    System.out.println("this is imgs!!!!!!!!!!!!!!!!!!!!");
+                                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+                                    imageViews.get(finalI).setImageBitmap(bitmap);
+                                    imageViews.get(finalI).setTag(bitmap);
                                 }
                             });
                         }
@@ -143,12 +143,7 @@ public class PicsActivity extends AppCompatActivity {
                     }
                 });
 
-
-
     }
-
-
-
 
     public boolean isOdd(long a){
         if((a&1) != 1){
@@ -174,7 +169,6 @@ public class PicsActivity extends AppCompatActivity {
                 uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
                         Toast.makeText(getApplicationContext(), "Upload successful", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -190,9 +184,21 @@ public class PicsActivity extends AppCompatActivity {
             }
 
             try {
+                num++;
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
-
-                //imageView.setImageBitmap(bitmap);
+                ImageView imageView = new ImageView(this);
+                imageView.setImageBitmap(bitmap);
+                TextView textView = new TextView(getApplicationContext());
+                textView.setText("PIC");
+                imageView.setAdjustViewBounds(true);
+                if (isOdd(num)){
+                    l3.addView(imageView);
+                    l3.addView(textView);
+                }
+                else {
+                    l4.addView(imageView);
+                    l4.addView(textView);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
