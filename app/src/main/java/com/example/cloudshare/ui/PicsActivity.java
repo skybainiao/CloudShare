@@ -168,13 +168,6 @@ public class PicsActivity extends AppCompatActivity {
                                                                     });
                                                             builder1.show();
 
-
-
-
-
-
-
-
                                                             Toast.makeText(PicsActivity.this,"Share",Toast.LENGTH_SHORT).show();
                                                         }
                                                     })
