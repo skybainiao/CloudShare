@@ -13,11 +13,13 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.cloudshare.Model.Pic;
 import com.example.cloudshare.R;
 import com.example.cloudshare.databinding.FragmentHomeBinding;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -82,23 +84,23 @@ public class PicsActivity extends AppCompatActivity {
                 System.out.println("num:"+num);
                 for (int i = 0; i < num; i++) {
                     ImageView imageView = new ImageView(getApplicationContext());
-                    TextView textView = new TextView(getApplicationContext());
-                    textView.setText("PIC");
+                    imageView.setPadding(0,50,0,0);
                     imageView.setAdjustViewBounds(true);
                     imageViews.add(imageView);
                     System.out.println("size:+++++"+imageViews.size());
                     if (isOdd(i)){
                         l3.addView(imageView);
-                        l3.addView(textView);
                     }
                     else {
                         l4.addView(imageView);
-                        l4.addView(textView);
                     }
+
 
                 }
             }
         });
+
+
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,6 +133,67 @@ public class PicsActivity extends AppCompatActivity {
                                     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
                                     imageViews.get(finalI).setImageBitmap(bitmap);
                                     imageViews.get(finalI).setTag(bitmap);
+                                    imageViews.get(finalI).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            ImageView imageView = new ImageView(getApplicationContext());
+                                            imageView.setImageBitmap(bitmap);
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(PicsActivity.this)
+                                                    .setTitle("Message")
+                                                    .setMessage("what do you want to do with the picture?")
+                                                    .setCancelable(true)
+                                                    .setView(imageView)
+                                                    .setNegativeButton("Share", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            EditText editText = new EditText(PicsActivity.this);
+                                                            AlertDialog.Builder builder1 = new AlertDialog.Builder(PicsActivity.this)
+                                                                    .setTitle("Message")
+                                                                    .setMessage("Enter the username of the user you want to share")
+                                                                    .setCancelable(true)
+                                                                    .setView(editText)
+                                                                    .setNegativeButton("Done", new DialogInterface.OnClickListener() {
+                                                                        @Override
+                                                                        public void onClick(DialogInterface dialog, int which) {
+                                                                            Pic pic = new Pic(listResult.getItems().get(finalI).getPath(),username,editText.getText().toString());
+                                                                            databaseReference.child("ImageTransfer").child(pic.getSender()).setValue(pic);
+                                                                            Toast.makeText(PicsActivity.this,"Done",Toast.LENGTH_SHORT).show();
+                                                                        }
+                                                                    })
+                                                                    .setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                                                                        @Override
+                                                                        public void onClick(DialogInterface dialog, int which) {
+                                                                            //
+                                                                        }
+                                                                    });
+                                                            builder1.show();
+
+
+
+
+
+
+
+
+                                                            Toast.makeText(PicsActivity.this,"Share",Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    })
+                                                    .setNeutralButton("Delete", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            l3.removeView(imageViews.get(finalI));
+                                                            l4.removeView(imageViews.get(finalI));
+                                                            listResult.getItems().get(finalI).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void unused) {
+                                                                    Toast.makeText(PicsActivity.this,"Deleted",Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                            builder.show();
+                                        }
+                                    });
                                 }
                             });
                         }

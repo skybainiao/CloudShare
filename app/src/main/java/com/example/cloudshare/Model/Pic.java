@@ -1,31 +1,51 @@
 package com.example.cloudshare.Model;
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
 
 public class Pic implements Serializable {
-    private int id;
-    private String name;
+    private String path;
+    private String sender;
+    private String receiver;
 
-    public Pic(){}
 
-    public Pic(int id,String name){
-        this.id=id;
-        this.name=name;
+    public Pic(String path,String sender,String receiver){
+        this.path=path;
+        this.sender=sender;
+        this.receiver=receiver;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPath(String path) {
+        this.path = path;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setReceiver(String receiver) {
+        this.receiver = receiver;
     }
 
-    public String getName() {
-        return name;
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 
-    public int getId() {
-        return id;
+    public String getPath() {
+        return path;
+    }
+
+    public String getReceiver() {
+        return receiver;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    @Override
+    public String toString() {
+        return "Pic{" +
+                "path='" + path + '\'' +
+                ", sender='" + sender + '\'' +
+                ", receiver='" + receiver + '\'' +
+                '}';
     }
 }
