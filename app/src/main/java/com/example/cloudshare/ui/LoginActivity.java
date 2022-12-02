@@ -93,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                                 startActivity(intent);
                             }
                             else {
-                                Toast.makeText(getApplicationContext(),"Incorrect username or password", Toast.LENGTH_LONG).show();
+                                //Toast.makeText(getApplicationContext(),"Incorrect username or password", Toast.LENGTH_LONG).show();
                             }
                         }
                         else {

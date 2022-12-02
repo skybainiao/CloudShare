@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/bg"
     tools:context=".ui.PicsActivity">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
