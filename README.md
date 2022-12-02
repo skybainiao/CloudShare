@@ -17,3 +17,7 @@ Requirement:
 8. As a registered user, I would like to log in to bookmark some pictures
 9. As a registered user, I want to log in to modify my avatar
 10. As a registered user, I would like to log in to comment on pictures when others share them
+
+![330051556403736513](https://user-images.githubusercontent.com/75226562/205371018-98484b1c-a425-40d4-9190-88963a2e35b4.jpg)
+![494470436789642463](https://user-images.githubusercontent.com/75226562/205371055-29b5f46e-5a6b-4a36-beb8-8e0c5ac6c92f.jpg)
+
