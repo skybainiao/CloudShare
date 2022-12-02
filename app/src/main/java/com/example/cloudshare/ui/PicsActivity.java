@@ -156,7 +156,7 @@ public class PicsActivity extends AppCompatActivity {
                                                                         @Override
                                                                         public void onClick(DialogInterface dialog, int which) {
                                                                             Pic pic = new Pic(listResult.getItems().get(finalI).getPath(),username,editText.getText().toString());
-                                                                            databaseReference.child("ImageTransfer").child(pic.getSender()).setValue(pic);
+                                                                            databaseReference.child("ImageTransfer").child(pic.getReceiver()).setValue(pic);
                                                                             Toast.makeText(PicsActivity.this,"Done",Toast.LENGTH_SHORT).show();
                                                                         }
                                                                     })
@@ -245,15 +245,15 @@ public class PicsActivity extends AppCompatActivity {
                 ImageView imageView = new ImageView(this);
                 imageView.setImageBitmap(bitmap);
                 TextView textView = new TextView(getApplicationContext());
-                textView.setText("PIC");
+                textView.setText(" ");
                 imageView.setAdjustViewBounds(true);
                 if (isOdd(num)){
-                    l3.addView(imageView);
-                    l3.addView(textView);
-                }
-                else {
                     l4.addView(imageView);
                     l4.addView(textView);
+                }
+                else {
+                    l3.addView(imageView);
+                    l3.addView(textView);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
