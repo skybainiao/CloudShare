@@ -113,10 +113,6 @@ public class HomeFragment extends Fragment {
         });
         loadPic();
 
-
-
-
-
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -129,13 +125,13 @@ public class HomeFragment extends Fragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 addFolder();
                                 //saveFolders(folderList);
-                                Toast.makeText(getContext(),"Folder",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(),"Added",Toast.LENGTH_SHORT).show();
                             }
                         })
                         .setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(getContext(),"Cancel",Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(getContext(),"Cancel",Toast.LENGTH_SHORT).show();
                             }
                         });
                 builder.show();
