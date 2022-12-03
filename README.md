@@ -19,6 +19,9 @@ Requirement:
 10. As a registered user, I would like to check my personal information (number of pictures stored, number of folders, available capacity)✔️
 
 
+I complete most of the requirements except adding friends in this application, because I don't think it is necessary, this requirement can be completed in the future.
+
+
 ![330051556403736513](https://user-images.githubusercontent.com/75226562/205371018-98484b1c-a425-40d4-9190-88963a2e35b4.jpg)
 ![494470436789642463](https://user-images.githubusercontent.com/75226562/205371055-29b5f46e-5a6b-4a36-beb8-8e0c5ac6c92f.jpg)
 ![517337440048259921](https://user-images.githubusercontent.com/75226562/205371733-33298126-5151-4a31-8402-965c7092f7b4.jpg)
