@@ -16,7 +16,7 @@ Requirement:
 7. As a registered user, i would like to log in to share my pictures with others            ✔️
 8. As a registered user, i would like to accept or reject pictures shared by others         ✔️
 9. As a registered user, i would like to change my password                                 ✔️
-10.As a registered user, I would like to check my personal information (number of pictures stored, number of folders, available capacity)✔️
+10. As a registered user, I would like to check my personal information (number of pictures stored, number of folders, available capacity)✔️
 
 
 ![330051556403736513](https://user-images.githubusercontent.com/75226562/205371018-98484b1c-a425-40d4-9190-88963a2e35b4.jpg)
