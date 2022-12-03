@@ -5,6 +5,8 @@ This idea comes from the chat software in the mobile phone,
 usually we often send some funny emoji when we chat, 
 so I want to create a platform for sharing pictures
 
+Youtube video:https://youtu.be/5RXdCte2wpc
+
 
 Requirement:
 1. As a user, I want to register an account to log into the application                     ✔️
